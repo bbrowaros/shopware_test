@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  shop:
+    container_name: himmelblau
+    image: dockware/dev:6.4.3.1
+    ports:
+      - "22:22"     # ssh
+      - "80:80"     # apache2
+      - "8888:8888" # watch admin
+      - "9998:9998" # watch storefront proxy (not needed if you start with "make watch-storefront")
+      - "9999:9999" # watch storefront
+    volumes:
+      - "./plugins:/var/www/html/custom/plugins"
+      - "db_volume:/var/lib/mysql"
+      - "./install.sh:/var/www/html/install.sh"
+    networks:
+      - web
+    environment:
+      - XDEBUG_ENABLED=1
+
+volumes:
+  db_volume:
+    driver: local
+
+## ***********************************************************************
+##  NETWORKS
+## ***********************************************************************
+networks:
+  web:
+    external: false
